@@ -132,11 +132,7 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
             msg = "z = " + (int)event.values[2];
             accelz.setText(msg);
 
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create(ACCELERO_MESSAGE_PATH);
-            putDataMapReq.getDataMap().putFloatArray(ACCELERO_MESSAGE_PATH, event.values);
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            PendingResult<DataApi.DataItemResult> pendingResult =
-                    Wearable.DataApi.putDataItem(mApiClient, putDataReq);
+            sendDataMap(ACCELERO_MESSAGE_PATH, event.values);
             //Log.d(TAG, "DATA'd");
         }
         else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
@@ -190,7 +186,14 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     }
 
 
+    private void sendDataMap (final String path, final float[] values) {
 
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(path);
+        putDataMapReq.getDataMap().putFloatArray(path, values);
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mApiClient, putDataReq);
+    }
 
     @Override
     public void onConnected(Bundle bundle) {
