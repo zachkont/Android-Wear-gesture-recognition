@@ -46,13 +46,13 @@
     </LinearLayout>
 
     <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        tools:text="gyroscope"
-        android:textSize="36sp"
-        android:textStyle="normal|bold" />
+    android:text="TextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/textView2"
+    tools:text="gyroscope"
+    android:textSize="36sp"
+    android:textStyle="normal|bold" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -81,6 +81,84 @@
             android:layout_height="wrap_content"
             android:id="@+id/gyroz"
             tools:text="gyroz"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        tools:text="linear"
+        android:textSize="36sp"
+        android:textStyle="normal|bold" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linex"
+            tools:text="linex"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/liney"
+            tools:text="liney"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linez"
+            tools:text="linez"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        tools:text="position"
+        android:textSize="36sp"
+        android:textStyle="normal|bold" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pos1"
+            tools:text="posx"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pos2"
+            tools:text="posy"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pos3"
+            tools:text="posz"
             android:layout_weight="1"/>
     </LinearLayout>
 

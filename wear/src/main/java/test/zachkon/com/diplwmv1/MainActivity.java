@@ -52,6 +52,7 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     private static final String WEAR_MESSAGE_PATH = "/message";
     private static final String GYRO_MESSAGE_PATH = "/gyromessage";
     private static final String ACCELERO_MESSAGE_PATH = "/acceleromessage";
+    private static final String LINEAR_MESSAGE_PATH = "/linearmessage";
 
 
     @Override
@@ -142,7 +143,7 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
             gyroy.setText(msg);
             msg = "z = " + (int)event.values[2];
             gyroz.setText(msg);
-
+            //**************************DONT FORGET
             PutDataMapRequest putDataMapReq = PutDataMapRequest.create(GYRO_MESSAGE_PATH);
             putDataMapReq.getDataMap().putFloatArray(GYRO_MESSAGE_PATH, event.values);
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
@@ -152,7 +153,12 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
         }
         else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             msg = "LINEAR: x= " + (int)event.values[0] +" y= "+ (int)event.values[1] + " z= " +(int)event.values[2];
-
+            float[] data = new float[4];
+            data[0]= event.values[0];
+            data[1]= event.values[1];
+            data[2]= event.values[2];
+            data[3] = event.timestamp;
+            sendDataMap(LINEAR_MESSAGE_PATH, data);
             //Log.d(TAG, msg);
         }
         else
@@ -180,7 +186,8 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
                     public void run() {
                         //mClockView.setText( "WHAT?" );
                     }
-                });*/
+                });
+*/
             }
         }).start();
     }
