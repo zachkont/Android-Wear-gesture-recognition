@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String WEAR_MESSAGE_PATH = "/message";
     private static final String GYRO_MESSAGE_PATH = "/gyromessage";
     private static final String ACCELERO_MESSAGE_PATH = "/acceleromessage";
+    private static final String LINEAR_MESSAGE_PATH = "/linearmessage";
 
     private TextView accelx;
     private TextView accely;
@@ -46,7 +47,14 @@ public class MainActivity extends AppCompatActivity implements
     private TextView gyrox;
     private TextView gyroy;
     private TextView gyroz;
+    private TextView linearx;
+    private TextView lineary;
+    private TextView linearz;
+    private TextView posx;
+    private TextView posy;
+    private TextView posz;
 
+    private float[] dataArray;
 
 
     @Override
@@ -57,12 +65,29 @@ public class MainActivity extends AppCompatActivity implements
         mTextView = (TextView) findViewById(R.id.myText);
         mTextView2 = (TextView) findViewById(R.id.myText2);
 
+        TextView acceltext = (TextView) findViewById(R.id.textView);
+        acceltext.setText("Accelerometer");
+        TextView gyrotext = (TextView) findViewById(R.id.textView2);
+        gyrotext.setText("Gyrocsope");
+        TextView linetext = (TextView) findViewById(R.id.textView3);
+        linetext.setText("Linear Accelerometer");
+        TextView postext = (TextView) findViewById(R.id.textView4);
+        postext.setText("Estimated Position");
+
         accelx = (TextView) findViewById(R.id.accelx);
         accely = (TextView) findViewById(R.id.accely);
         accelz = (TextView) findViewById(R.id.accelz);
         gyrox = (TextView) findViewById(R.id.gyrox);
         gyroy = (TextView) findViewById(R.id.gyroy);
         gyroz = (TextView) findViewById(R.id.gyroz);
+        linearx = (TextView) findViewById(R.id.linex);
+        lineary = (TextView) findViewById(R.id.liney);
+        linearz = (TextView) findViewById(R.id.linez);
+        posx = (TextView) findViewById(R.id.pos1);
+        posy = (TextView) findViewById(R.id.pos2);
+        posz = (TextView) findViewById(R.id.pos3);
+
+
 
 
         final Button button = (Button) findViewById(R.id.myButton);
@@ -78,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements
                 } else {
                     mTextView.setText("YES");
                 }
-
+                velocity[0] = velocity[1] = velocity[2] = 0f;
+                position[0] = position[1] = position[2] = 0f;
 
             }
         });
@@ -115,17 +141,26 @@ public class MainActivity extends AppCompatActivity implements
                 DataItem item = event.getDataItem();
                 if (item.getUri().getPath().compareTo(ACCELERO_MESSAGE_PATH) == 0) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                    float[] accelArray = dataMap.getFloatArray(ACCELERO_MESSAGE_PATH);
-                    accelx.setText(Float.toString(accelArray[0]));
-                    accely.setText(Float.toString(accelArray[1]));
-                    accelz.setText(Float.toString(accelArray[2]));
+                    dataArray = dataMap.getFloatArray(ACCELERO_MESSAGE_PATH);
+                    accelx.setText(Float.toString(dataArray[0]));
+                    accely.setText(Float.toString(dataArray[1]));
+                    accelz.setText(Float.toString(dataArray[2]));
                 }
                 else if (item.getUri().getPath().compareTo(GYRO_MESSAGE_PATH) == 0) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    //**************************************DONT FORGET
                     float[] gyroArray = dataMap.getFloatArray(GYRO_MESSAGE_PATH);
                     gyrox.setText(Float.toString(gyroArray[0]));
                     gyroy.setText(Float.toString(gyroArray[1]));
                     gyroz.setText(Float.toString(gyroArray[2]));
+                }
+                else if (item.getUri().getPath().compareTo(LINEAR_MESSAGE_PATH) == 0) {
+                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    dataArray = dataMap.getFloatArray(LINEAR_MESSAGE_PATH);
+                    linearx.setText(Float.toString(dataArray[0]));
+                    lineary.setText(Float.toString(dataArray[1]));
+                    linearz.setText(Float.toString(dataArray[2]));
+                    findPosition(dataArray);
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 // DataItem deleted
@@ -180,6 +215,37 @@ public class MainActivity extends AppCompatActivity implements
         return ByteBuffer.wrap(b, offset, 4).order(ByteOrder.LITTLE_ENDIAN).getFloat();
     }
 
+    static final float NS2S = 1.0f / 1000000000.0f;
+    float[] last_values = null;
+    float[] velocity = null;
+    float[] position = null;
+    float last_timestamp = 0;
+
+    private void findPosition(float[] dataArray) {
+
+        if(last_values != null){
+            float dt = (dataArray[3] - last_timestamp) * NS2S;
+
+            for(int index = 0; index < 3;++index){
+                velocity[index] += (dataArray[index] + last_values[index])/2 * dt;
+                position[index] += velocity[index] * dt;
+            }
+        }
+        else{
+            last_values = new float[3];
+            velocity = new float[3];
+            position = new float[3];
+            velocity[0] = velocity[1] = velocity[2] = 0f;
+            position[0] = position[1] = position[2] = 0f;
+        }
+        System.arraycopy(dataArray, 0, last_values, 0, 3);
+        last_timestamp = dataArray[3];
+
+        posx.setText("x= " + Float.toString(position[0]));
+        posy.setText("y= " + Float.toString(position[1]));
+        posz.setText("z= " + Float.toString(position[2]));
+
+    }
 
 }
 
